@@ -73,6 +73,7 @@ def FormatString(submission, n):
 user_input = "In the beginning God created the heaven and the earth. And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters."
 words_per_line = 5
 
+
 print(FormatString(user_input, words_per_line))
 
 # Question 2 (50%): Pandas: Use the two small datasets included in the repo to 
@@ -80,18 +81,34 @@ print(FormatString(user_input, words_per_line))
 # Load and merge the two dataframes on "msa". Explain in a 1-2 line comment
 # which type of join is the appropriate one.
 
+# We should use a left join because we want the merged dataset to contain all the
+# rows of employment, with additional variables matched from labor_force
+
+import pandas as pd
+employment = pd.read_csv("./employment.csv", skipfooter = 3)
+labor_force = pd.read_csv("./labor force.csv", skipfooter = 3)
+
+merged = employment.merge(labor_force, how = "left", on = "msa")
+
 # Look at what happened to the "country", "year", and "month" columns after the
 # merge. Redo the merge to fix the issue.
+# The problem is we have duplicate columns, and pandas appended suffixes.
+merged = employment.merge(labor_force[["msa", "Labor Force"]], how = "left", on = "msa")
 
 # Turn the "year" and "month" columns into a proper "date" column, with a 
 # datetime datatype.
+merged["day"] = 1
+merged["date"] = pd.to_datetime(merged[["year", "month", "day"]])
+merged = merged[["country", "msa", "Employment", "Labor Force", "date"]]
 
 # Calculate a new column that shows the unemployment rate for each MSA.
+merged["unemployment_rate"] = merged["Employment"] / merged["Labor Force"]
 
 # Oops! Something is clearly wrong with the Houston MSA. The correct labor
 # force value is 2,733,348, but in reproducible research, we should never 
 #directly modify the raw data, even when there are mistakes. Fix the value 
 # using loc, then recalculate.
+
 
 # Use the map method to make a new column that shows the unemployment rate
 # formatted neatly as a percentage, with the % symbol after it. Note that you
