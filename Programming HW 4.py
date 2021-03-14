@@ -1,10 +1,24 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+"""
+A minor style note--python functions should be named in all lower case, like this:
+    validate_string, wrap_text, etc.
+    
+Q2.6 - Wrong map method used; you used map from base python but we were looking 
+for map from pandas (-1)
+https://pandas.pydata.org/docs/reference/api/pandas.Series.map.html
+
+Great work!
+99/100
+    
+"""
+
 from datetime import date
 import random
 import math
-path = "C:\\Users\\jcinterrante\\Documents\\GitHub\\homework-4-jcinterrante\\"
+#path = "C:\\Users\\jcinterrante\\Documents\\GitHub\\homework-4-jcinterrante\\"
+path = '/Users/mollybair/Documents/GitHub/D & P II Winter 21 Grading/HW 4/homework-4-jcinterrante'
 
 # The first day of class was January 11th, 2021. Write code that shows how many
 # days have elapsed between then and now, where "now" is the date someone runs
@@ -90,8 +104,8 @@ print(FormatString(user_input, words_per_line))
 # observation is only valid if it has info for both employment and labor force
 
 import pandas as pd
-employment = pd.read_csv(path + "employment.csv", skipfooter = 3)
-labor_force = pd.read_csv(path + "labor force.csv", skipfooter = 3)
+employment = pd.read_csv(path + "/employment.csv", skipfooter = 3)
+labor_force = pd.read_csv(path + "/labor force.csv", skipfooter = 3)
 
 merged = employment.merge(labor_force, how = "inner", on = "msa")
 
@@ -106,7 +120,7 @@ merged.columns = [x.lower().replace(" ", "_") for x in merged.columns]
 merged["day"] = 1
 merged["date"] = pd.to_datetime(merged[["year", "month", "day"]])
 merged = merged[["country", "msa", "employment", "labor_force", "date"]]
-
+print(merged.head())
 # Calculate a new column that shows the unemployment rate for each MSA.
 merged["unemployment_rate"] = 1-(merged["employment"] / merged["labor_force"])
 
@@ -135,7 +149,7 @@ merged["unemployment_rate_percent"] = list(map(MakePercent, merged["unemployment
 # the mean.
 unemployment_rate_mean = merged["unemployment_rate"].mean()
 high_unemployment = merged.loc[merged["unemployment_rate"] > unemployment_rate_mean]
-
+print(high_unemployment.head())
 # Write the final dataframe to a new file named "data.csv" and commit it to
 # your repo with your code. Since the dataframe index is not meaningful here,
 # write it without the index.
